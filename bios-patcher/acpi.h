@@ -12,6 +12,8 @@
 
 void set_field_value(char region[4], char field[4], uint32_t value);
 
+acpi_rsdp * find_rsdp();
+
 typedef struct acpi_rsdp {
     char  magic[8];		/* "RSD PTR " */
     uint8_t  csum;
