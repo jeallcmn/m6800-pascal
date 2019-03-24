@@ -6,13 +6,19 @@
 #define BIOS_PATCHER_ACPI_H
 
 #include <inttypes.h>
+#include <stdbool.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-void set_field_value(char region[4], char field[4], uint32_t value);
+enum tbl_errs {
+    ERR_NONE,            /* No errors */
+    ERR_CSUM,            /* Invalid checksum */
+    ERR_SIZE,            /* Impossibly large table */
+    ERR_NOSIG            /* No signature */
+};
 
-acpi_rsdp * find_rsdp();
 
 typedef struct acpi_rsdp {
     char  magic[8];		/* "RSD PTR " */
@@ -146,5 +152,9 @@ typedef struct acpi_facs {
 //void parse_acpi(void);
 //
 //acpi_rsdp *find_rsdp(void);
+
+void set_field_value(char region[4], char field[4], uint32_t value);
+
+
 
 #endif //BIOS_PATCHER_ACPI_H
