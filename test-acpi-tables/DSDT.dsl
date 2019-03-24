@@ -493,7 +493,7 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
     Field (SANV, AnyAcc, Lock, Preserve)
     {
         SARV,   32, 
-        ASL_,   32, 
+        ASLB,   32, 
         IMON,   8, 
         IGDS,   8, 
         CADL,   8, 
@@ -553,11 +553,11 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
         CPSP,   32, 
         EECP,   8, 
         EVCP,   16, 
-        XBA_,   32, 
+        XBAS,   32, 
         GBAS,   16, 
         SGGP,   8, 
         NVGA,   32, 
-        NVH_,   32, 
+        NVHA,   32, 
         AMDA,   32, 
         NDID,   8, 
         DID1,   32, 
