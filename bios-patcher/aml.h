@@ -7,16 +7,6 @@
 
 #include "acpi.h"
 
-//
-//typedef struct aml_field_op_hdr {
-//    uint8_t op;
-//    uint8_t op_type;
-//    uint16_t field_length;
-//    char name[4];
-//    uint8_t field_flags;
-//    void * field_list;
-//};
-
 typedef struct aml_op_hdr {
     uint8_t op;
     uint8_t op_type;
@@ -32,8 +22,12 @@ typedef struct aml_opreg {
     uint16_t parm2;
 } aml_opreg;
 
-
-void * find_field(aml_opreg, char name[4]);
+typedef struct field_value {
+    char region[4];
+    char field[4];
+    uint32_t field_location;
+    uint32_t offset_value;
+} field_value;
 
 aml_op_hdr * find_region(acpi_hdr *dsdt, char name[4]);
 

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+
+
 umount -f /dev/sdc1
 mkdir -p /media/jon/syslinux
 mount -o flush,sync /dev/sdc1 /media/jon/syslinux

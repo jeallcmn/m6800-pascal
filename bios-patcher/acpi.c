@@ -14,7 +14,7 @@ bool addr_ok(uint64_t addr) {
 
 
 
-static acpi_hdr * find_rsdt_entry(acpi_rsdt *rsdt, char sig[4]) {
+acpi_hdr * find_rsdt_entry(acpi_rsdt *rsdt, char sig[4]) {
     int num_entries = (rsdt -> hdr.len - sizeof(rsdt -> hdr)) / 4;
     for(int i=0; i< num_entries; i++) {
 
@@ -26,7 +26,7 @@ static acpi_hdr * find_rsdt_entry(acpi_rsdt *rsdt, char sig[4]) {
     return 0;
 };
 
-static acpi_hdr * find_xsdt_entry(acpi_xsdt *xsdt, char sig[4]) {
+acpi_hdr * find_xsdt_entry(acpi_xsdt *xsdt, char sig[4]) {
     int num_entries = (xsdt -> hdr.len - sizeof(xsdt -> hdr)) / 8;
     for(int i=0; i< num_entries; i++) {
         acpi_hdr * entry = (acpi_hdr *) xsdt -> entry[i];
@@ -88,7 +88,7 @@ static acpi_rsdp *scan_for_rsdp(uint32_t base, uint32_t end) {
 }
 
 
-static acpi_rsdp *find_rsdp(void) {
+acpi_rsdp *find_rsdp(void) {
     uint32_t ebda;
     acpi_rsdp *rsdp;
 
@@ -103,49 +103,34 @@ static acpi_rsdp *find_rsdp(void) {
     return scan_for_rsdp(0xe0000, 0x100000);
 }
 
-
-static void set_dsdt_field_value(acpi_hdr *dsdt, char region[4], char field[4], uint32_t value){
-    if(dsdt == 0)
-        return;
-
-    printf("\t%.4s(%d) - Setting %.4s:%.4s value to %#08x\n", dsdt -> sig, dsdt -> len, region, field, value);
-
-    aml_opreg * opreg = (aml_opreg *) find_region(dsdt, region);
-    if(opreg == 0) {
-        printf("\t\tRegion not found.\n");
-        return;
+static void maybe_set_facs(acpi_fadt * fadt, acpi_facs * facs) {
+    if( fadt != 0 ) {
+        //overwrite only if the sig is missing
+        if(strncmp(fadt -> facs_addr, "FACS", 4) != 0) {
+            //overwrite the facs table.
+            printf("Overwriting FACS table  @ %#08x\n", fadt -> facs_addr);
+            memcpy(fadt->facs_addr, facs, facs->len);
+        } else {
+            printf("FACS @ %#08x is good, skipping overwrite...\n", fadt -> facs_addr);
+        }
+    } else {
+        printf("No FADT\n");
     }
-    printf("\t\tRegion: %.4s (%#08x, len:%#04x)\n", opreg -> hdr.name, opreg ->parm1, opreg -> parm2);
 }
 
-void set_field_value(char region[4], char field[4], uint32_t value) {
-    printf("Setting %.4s.%.4s field to %#08x\n", region, field, value);
+void set_facs(acpi_facs * facs) {
+    printf("Setting FACs table (maybe)....\n");
+    acpi_rsdp * rsdp = find_rsdp();
+    printf("RSDP %#08x\n", rsdp);
+    printf("RSDT %#08x\n", rsdp -> rsdt_addr);
+    acpi_fadt * fadt = find_rsdt_entry(rsdp -> rsdt_addr, "FACP");
+    printf("RSDT FADT/FACP %#08x\n", fadt);
+    maybe_set_facs(fadt, facs);
 
-    acpi_rsdp *rsdp = find_rsdp();
-
-    // RSDT
-    printf("RSDT:\n");
-    acpi_fadt * fadt = find_rsdt_entry((acpi_rsdt *) rsdp -> rsdt_addr, "FACP");
-    acpi_hdr * dsdt = (acpi_hdr * ) fadt -> dsdt_addr;
-    set_dsdt_field_value(dsdt, region, field, value);
-
-    //also look in entries for qemu testing...
-    dsdt = (acpi_hdr *) find_rsdt_entry( (acpi_rsdt *) rsdp -> rsdt_addr, "DSDT");
-    set_dsdt_field_value(dsdt, region, field, value);
-
-    // XSDT
     if(rsdp -> xsdt_addr != 0) {
-        fadt = find_xsdt_entry((acpi_xsdt *)rsdp -> xsdt_addr, "FACP");
-
-        if(fadt != 0) {
-            printf("XSDT:\n");
-            dsdt = (acpi_hdr *) fadt->dsdt_addr;
-            set_dsdt_field_value(dsdt, region, field, value);
-
-            //also look in entries for qemu testing...
-            dsdt = (acpi_hdr *) find_xsdt_entry((acpi_xsdt *) rsdp->xsdt_addr, "DSDT");
-            set_dsdt_field_value(dsdt, region, field, value);
-        }
+        printf("XSDT %#08x\n", rsdp->xsdt_addr);
+        fadt = find_xsdt_entry(rsdp->xsdt_addr, "FACP");
+        printf("XSDT FADT/FACP %#08x\n", fadt);
+        maybe_set_facs(fadt, facs);
     }
-
-};
+}

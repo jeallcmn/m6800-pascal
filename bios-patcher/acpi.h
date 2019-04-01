@@ -123,38 +123,12 @@ typedef struct acpi_facs {
     char  reserved[31];
 } acpi_facs;
 
-//
-//typedef struc aml_field_op_hdr {
-//    uint8_t op;
-//    uint8_t op_type;
-//    uint16_t field_length;
-//    char name[4];
-//    uint8_t fielSd_flags;
-//    void * field_list;
-//};
-//
-//typedef struct aml_op_hdr {
-//    uint8_t op;
-//    uint8_t op_type;
-//    char name[4];
-//    uint8_t region_type;
-//} aml_op_hdr;
-//
-//typedef struct aml_opreg {
-//    aml_opreg_hdr hdr;
-//    uint8_t parm1_type;
-//    uint32_t parm1;
-//    uint8_t parm2_type;
-//    uint16_t parm2;
-//    aml_field_op_hdr field_op;
-//} aml_opreg;
-//
-//void parse_acpi(void);
-//
-//acpi_rsdp *find_rsdp(void);
+acpi_rsdp *find_rsdp(void);
 
-void set_field_value(char region[4], char field[4], uint32_t value);
+acpi_hdr * find_rsdt_entry(acpi_rsdt *rsdt, char sig[4]);
+acpi_hdr * find_xsdt_entry(acpi_xsdt *xsdt, char sig[4]);
 
 
+void set_facs(acpi_facs * facs);
 
 #endif //BIOS_PATCHER_ACPI_H

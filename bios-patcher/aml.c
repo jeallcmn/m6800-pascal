@@ -25,7 +25,8 @@ aml_op_hdr * find_region(acpi_hdr *dsdt, char region_name[4]) {
     return 0;
 }
 
-void * find_field(aml_opreg, char name[4]) {
-
+void * find_field(aml_opreg * region, char name[4]) {
+    printf("Finding field %.4s for region %s\n", name, region -> hdr.name);
+    return 0;
 }
 

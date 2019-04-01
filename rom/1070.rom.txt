@@ -1,0 +1,36 @@
+qjon@m6800:~/rom$ sudo ./nvflash_linux --save 1070.rom
+
+NVIDIA Firmware Update Utility (Version 5.414.0)
+Simplified Version For OEM Only
+Adapter: GeForce GTX 1070     (10DE,1BA1,1028,15CD) H:--:NRM  S:00,B:01,D:00,F:00
+
+Identifying EEPROM...
+EEPROM ID (EF,6013) : WBond W25Q40EW 1.65-1.95V 4096Kx1S, page
+Reading adapter firmware image...
+IFR Data Size         : 2184 bytes
+IFR CRC32             : 28D07F55
+IFR Image Size        : 2560 bytes
+IFR Image CRC32       : AA330892
+IFR Subsystem ID      : 1462-11FF
+Image Size            : 256512 bytes
+Version               : 86.04.42.00.03
+~CRC32                : 55D536FB
+Image Hash            : 6BC4B5AD42BB5868BF564137F6805CC9
+Subsystem ID          : 1462-11FF
+Hierarchy ID          : Normal Board
+Chip SKU              : 725-0
+Project               : 2914-0010
+CDP                   : N/A
+Build Date            : 09/07/16
+Modification Date     : 09/07/16
+Build GUID            : 00000000000000000000000000000000
+UEFI Support          : Yes
+UEFI Version          : 0x30004 (Jul 19 2016 @ 20955989 )
+UEFI Variant Id       : 0x0000000000000007 ( GP1xx )
+UEFI Signer(s)        : Microsoft Corporation UEFI CA 2011
+InfoROM Version       : G001.0000.01.03
+InfoROM Backup Exist  : YES
+License Placeholder   : Absent
+GPU Mode              : N/A
+Saving of image completed.
+
