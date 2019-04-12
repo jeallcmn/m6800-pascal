@@ -29,7 +29,7 @@ acpi_hdr * find_rsdt_entry(acpi_rsdt *rsdt, char sig[4]) {
 acpi_hdr * find_xsdt_entry(acpi_xsdt *xsdt, char sig[4]) {
     int num_entries = (xsdt -> hdr.len - sizeof(xsdt -> hdr)) / 8;
     for(int i=0; i< num_entries; i++) {
-        acpi_hdr * entry = (acpi_hdr *) xsdt -> entry[i];
+        acpi_hdr * entry = (acpi_hdr *) (uint32_t) xsdt -> entry[i];
         if(strncmp(entry -> sig, sig, 4) == 0) {
             return entry;
         }
@@ -106,10 +106,10 @@ acpi_rsdp *find_rsdp(void) {
 static void maybe_set_facs(acpi_fadt * fadt, acpi_facs * facs) {
     if( fadt != 0 ) {
         //overwrite only if the sig is missing
-        if(strncmp(fadt -> facs_addr, "FACS", 4) != 0) {
+        if(strncmp((void  *)fadt -> facs_addr, "FACS", 4) != 0) {
             //overwrite the facs table.
             printf("Overwriting FACS table  @ %#08x\n", fadt -> facs_addr);
-            memcpy(fadt->facs_addr, facs, facs->len);
+            memcpy((void *)fadt->facs_addr, facs, facs->len);
         } else {
             printf("FACS @ %#08x is good, skipping overwrite...\n", fadt -> facs_addr);
         }
@@ -121,16 +121,16 @@ static void maybe_set_facs(acpi_fadt * fadt, acpi_facs * facs) {
 void set_facs(acpi_facs * facs) {
     printf("Setting FACs table (maybe)....\n");
     acpi_rsdp * rsdp = find_rsdp();
-    printf("RSDP %#08x\n", rsdp);
+    printf("RSDP %#08x\n", (uint32_t)rsdp);
     printf("RSDT %#08x\n", rsdp -> rsdt_addr);
-    acpi_fadt * fadt = find_rsdt_entry(rsdp -> rsdt_addr, "FACP");
-    printf("RSDT FADT/FACP %#08x\n", fadt);
+    acpi_fadt * fadt = (acpi_fadt *) find_rsdt_entry((acpi_rsdt *)rsdp -> rsdt_addr, "FACP");
+    printf("RSDT FADT/FACP %#08x\n", (uint32_t)fadt);
     maybe_set_facs(fadt, facs);
 
     if(rsdp -> xsdt_addr != 0) {
-        printf("XSDT %#08x\n", rsdp->xsdt_addr);
-        fadt = find_xsdt_entry(rsdp->xsdt_addr, "FACP");
-        printf("XSDT FADT/FACP %#08x\n", fadt);
+        printf("XSDT %#08x\n", (uint32_t)rsdp->xsdt_addr);
+        fadt = (acpi_fadt *) find_xsdt_entry((acpi_xsdt *)(uint32_t)rsdp->xsdt_addr, "FACP");
+        printf("XSDT FADT/FACP %#08x\n", (uint32_t) fadt);
         maybe_set_facs(fadt, facs);
     }
 }
