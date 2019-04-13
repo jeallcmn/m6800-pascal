@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+import binascii
+import csv
+import argparse
+
+parser = argparse.ArgumentParser(description="Print a memory map of ACPI Operation Region")
+parser.add_argument('--csv', required=True, help='CSV file consisting of the Operation Region Field definitions')
+parser.add_argument('--bin', required=True, help='Binary dump of the Operation Region memory')
+args = parser.parse_args()
+
+with open(args.bin, "rb") as f:
+    data = f.read()
+    with open(args.csv) as cf:
+        csv_reader = csv.reader(cf, delimiter=",")
+        current = 0
+        for row in csv_reader:
+            var_name = row[0].strip()
+            var_len = row[1].strip()
+            # print (f'{var_name}:{var_len}')
+            if var_name.startswith("Offset"):
+                l = var_name.split(" ")[1]
+                current = int(l.strip('()'), 0)
+                # print( f'Setting offest to {hex(current)}')
+            else:
+                num_bytes = int(int(var_len) / 8)
+                # print( f'{num_bytes} bytes')
+                print( f'{row[0]}: {data[current: current+num_bytes][::-1].hex()}')
+                current += num_bytes

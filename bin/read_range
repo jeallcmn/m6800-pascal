@@ -1,0 +1,5 @@
+#!/bin/bash
+
+dd if=/dev/mem bs=1 count=$(($2-$1)) skip=$(($1)) status=none
+echo 
+
