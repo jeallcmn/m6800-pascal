@@ -3,6 +3,9 @@
 	[
 		{
 			"path": "."
+		},
+		{
+			"path": "/run/user/1000/gvfs/smb-share:server=media01,share=e"
 		}
 	]
 }

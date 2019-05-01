@@ -1,0 +1,51 @@
+980M
+l
+
+[    0.000000] BIOS-e820: [mem 0x000000009edbf000-0x000000009edc5fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000ca6d4000-0x00000000ca7fffff] ACPI NVS
+[    0.045535] PM: Registering ACPI NVS region [mem 0x9edbf000-0x9edc5fff] (28672 bytes)
+[    0.045535] PM: Registering ACPI NVS region [mem 0xca6d4000-0xca7fffff] (1228800 bytes)
+jon@m6800:~/Work/980-info$ grep "Region" dsdt.dsl | grep "SystemMemory"
+    OperationRegion (GNVS, SystemMemory, 0xCA7FCC18, 0x02B4)
+    OperationRegion (SANV, SystemMemory, 0xCA7FDC18, 0x016D)
+    OperationRegion (EXBU, SystemMemory, 0xCA7FFF18, 0x000E)
+            OperationRegion (MCHT, SystemMemory, 0xFED10000, 0x1100)
+ 
+
+ [    0.000000] BIOS-e820: [mem 0x000000009edbf000-0x000000009edc5fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000ca6d4000-0x00000000ca7fffff] ACPI NVS
+[    0.041543] PM: Registering ACPI NVS region [mem 0x9edbf000-0x9edc5fff] (28672 bytes)
+[    0.041543] PM: Registering ACPI NVS region [mem 0xca6d4000-0xca7fffff] (1228800 bytes)
+jon@m6800:~/Work/1070-Info$ grep "Region" dsdt.dsl | grep "SystemMemory"
+    OperationRegion (GNVS, SystemMemory, 0xCA7FCC18, 0x02B4)
+    OperationRegion (SANV, SystemMemory, 0xCA7FDC18, 0x016D)
+    OperationRegion (EXBU, SystemMemory, 0xCA7FFF18, 0x000E)
+
+
+
+SANV OpRegion 
+0xCD7FDC18
+
+
+vBIOS located at NVS2 + 0x104418
+
+[    0.000000] BIOS-e820: [mem 0x00000000a1db1000-0x00000000a1db7fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000cd6d4000-0x00000000cd7fffff] ACPI NVS
+[    0.045540] PM: Registering ACPI NVS region [mem 0xa1db1000-0xa1db7fff] (28672 bytes)
+[    0.045540] PM: Registering ACPI NVS region [mem 0xcd6d4000-0xcd7fffff] (1228800 bytes)
+
+
+0xcd6d4000 + 0x104418 = 
+
+0XCD6D4000 //START OF NVS
+
+0xCD7D6000  //SMIB
+
+0xCD7D8418 //vBIOS
+0xCD7FCC18 //GNVS
+    0xCD7FCECC
+    0xCD7FDC18 //SANV
+    0xCD7FDD85
+    0xCD7FFF18 //EXBU
+0xCD7FE080 //FACS
+0xCD7DFFFF //END OF NVS

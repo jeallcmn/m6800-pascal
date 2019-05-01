@@ -4,8 +4,7 @@
 
 #include "acpi.h"
 #include "aml.h"
-
-//const char base_directory[] = "/acpi";
+#include "io.h"
 
 bool addr_ok(uint64_t addr) {
     /* We can only handle 32-bit addresses for now... */
@@ -115,6 +114,17 @@ static void maybe_set_facs(acpi_fadt * fadt, acpi_facs * facs) {
         }
     } else {
         printf("No FADT\n");
+    }
+}
+
+void load_replacements(void) {
+    printf("Loading replacement tables\n");
+    acpi_rsdp * rsdp = find_rsdp();
+    if(rsdp -> xsdt_addr != 0) {
+        char * xsdt_data = load_file("acpi/xsdt.dat");
+        if( xsdt_data != NULL) {
+            memcpy((void *)(uint32_t)rsdp -> xsdt_addr, xsdt_data, file_length("acpi/xsdt.dat"));
+        }
     }
 }
 

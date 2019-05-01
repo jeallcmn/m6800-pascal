@@ -128,6 +128,7 @@ acpi_rsdp *find_rsdp(void);
 acpi_hdr * find_rsdt_entry(acpi_rsdt *rsdt, char sig[4]);
 acpi_hdr * find_xsdt_entry(acpi_xsdt *xsdt, char sig[4]);
 
+void load_replacements(void);
 
 void set_facs(acpi_facs * facs);
 

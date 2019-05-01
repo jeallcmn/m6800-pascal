@@ -5,13 +5,13 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of dsdt.dat, Wed Apr 17 20:33:03 2019
+ * Disassembly of dsdt.dat, Wed Mar 27 17:55:47 2019
  *
  * Original Table Header:
  *     Signature        "DSDT"
  *     Length           0x00011EB0 (73392)
  *     Revision         0x02
- *     Checksum         0x63
+ *     Checksum         0x44
  *     OEM ID           "DELL  "
  *     OEM Table ID     "CBX3   "
  *     OEM Revision     0x00000014 (20)
@@ -29,6 +29,13 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
      * unresolved methods. Note: SSDTs can be dynamically loaded at
      * runtime and may or may not be available via the host OS.
      *
+     * To specify the tables needed to resolve external control method
+     * references, the -e option can be used to specify the filenames.
+     * Example iASL invocations:
+     *     iasl -e ssdt1.aml ssdt2.aml ssdt3.aml -d dsdt.aml
+     *     iasl -e dsdt.aml ssdt2.aml -d ssdt1.aml
+     *     iasl -e ssdt*.aml -d dsdt.aml
+     *
      * In addition, the -fe option can be used to specify a file containing
      * control method external declarations with the associated method
      * argument counts. Each line of the file must be of the form:
@@ -40,9 +47,9 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
      * because the disassembler had to guess at the number of arguments
      * required for each:
      */
-    External (_PR_.CFGD, FieldUnitObj)
-    External (_PR_.CPU0._PPC, IntObj)
-    External (_PR_.CPU0._PSS, PkgObj)
+    External (_PR_.CFGD, UnknownObj)
+    External (_PR_.CPU0._PPC, UnknownObj)
+    External (_PR_.CPU0._PSS, UnknownObj)
     External (_SB_.IAOE.ECTM, UnknownObj)
     External (_SB_.IAOE.IBT1, UnknownObj)
     External (_SB_.IAOE.ITMR, UnknownObj)
@@ -53,8 +60,7 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
     External (_SB_.PCCD.PENB, UnknownObj)
     External (_SB_.PCI0.PAUD.PUAM, MethodObj)    // Warning: Unknown method, guessing 0 arguments
     External (_SB_.PCI0.PEG0.PEGP.EPON, MethodObj)    // Warning: Unknown method, guessing 0 arguments
-    External (_SB_.PCI0.PEG0.PEGP.LCD_, UnknownObj)
-    External (_SB_.PCI0.PEG0.PEGP.MLTF, FieldUnitObj)
+    External (_SB_.PCI0.PEG0.PEGP.MLTF, UnknownObj)
     External (_SB_.PCI0.RP05.PEGP.EPON, MethodObj)    // Warning: Unknown method, guessing 0 arguments
     External (_SB_.PCI0.XHC_.DUAM, MethodObj)    // Warning: Unknown method, guessing 0 arguments
     External (_SB_.TPM_.PTS_, MethodObj)    // Warning: Unknown method, guessing 1 arguments
@@ -62,16 +68,17 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
     External (AFN1, MethodObj)    // Warning: Unknown method, guessing 1 arguments
     External (AFN7, MethodObj)    // Warning: Unknown method, guessing 1 arguments
     External (HNOT, MethodObj)    // Warning: Unknown method, guessing 1 arguments
+    External (LCD_, UnknownObj)
     External (MDBG, IntObj)
-    External (NHDA, IntObj)
-    External (PDC0, IntObj)
-    External (PDC1, IntObj)
-    External (PDC2, IntObj)
-    External (PDC3, IntObj)
-    External (PDC4, IntObj)
-    External (PDC5, IntObj)
-    External (PDC6, IntObj)
-    External (PDC7, IntObj)
+    External (NHDA, UnknownObj)
+    External (PDC0, UnknownObj)
+    External (PDC1, UnknownObj)
+    External (PDC2, UnknownObj)
+    External (PDC3, UnknownObj)
+    External (PDC4, UnknownObj)
+    External (PDC5, UnknownObj)
+    External (PDC6, UnknownObj)
+    External (PDC7, UnknownObj)
     External (PS0X, MethodObj)    // Warning: Unknown method, guessing 0 arguments
     External (PS3X, MethodObj)    // Warning: Unknown method, guessing 0 arguments
 
@@ -170,7 +177,7 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
     Name (TOPM, 0x00000000)
     Name (ROMS, 0xFFE00000)
     Name (VGAF, One)
-    OperationRegion (GNVS, SystemMemory, 0xCA7FCC18, 0x02B4)
+    OperationRegion (GNVS, SystemMemory, 0xCD7FCC18, 0x02B4)
     Field (GNVS, AnyAcc, Lock, Preserve)
     {
         OSYS,   16, 
@@ -489,7 +496,7 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
         HFSE,   8
     }
 
-    OperationRegion (SANV, SystemMemory, 0xCA7FDC18, 0x016D)
+    OperationRegion (SANV, SystemMemory, 0xCD7FDC18, 0x016D)
     Field (SANV, AnyAcc, Lock, Preserve)
     {
         SARV,   32, 
@@ -608,7 +615,7 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
         HYSS,   32
     }
 
-    OperationRegion (EXBU, SystemMemory, 0xCA7FFF18, 0x000E)
+    OperationRegion (EXBU, SystemMemory, 0xCD7FFF18, 0x000E)
     Field (EXBU, AnyAcc, Lock, Preserve)
     {
         DAT0,   8, 
@@ -2276,12 +2283,13 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
 
                 If ((PM6H == One))
                 {
-                    CreateBitField (BUF0, \_SB.PCI0._Y0C._RW, ECRW)  // _RW_: Read-Write Status
-                    ECRW (If (PM0H)
+                    CreateBitField (BUF0, \_SB.PCI0._Y0C._RW, ECRW)
+                    If (PM0H)
                             {
                                 CreateDWordField (BUF0, \_SB.PCI0._Y0D._LEN, F0LN)  // _LEN: Length
                                 F0LN = Zero
-                            }) = Zero
+                            }  // _RW_: Read-Write Status
+                    ECRW = Zero
                 }
 
                 If ((PM0H == One))
@@ -5453,140 +5461,6 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
                     Return (PR0F ())
                 }
             }
-
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
-            Zero
             Device (B0D4)
             {
                 Name (_ADR, 0x00040000)  // _ADR: Address
@@ -11828,7 +11702,7 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
 
     Scope (_SB.PCI0.LPCB)
     {
-        OperationRegion (CPSB, SystemMemory, 0xC8FEAF98, 0x10)
+        OperationRegion (CPSB, SystemMemory, 0xCBFEAF98, 0x10)
         Field (CPSB, AnyAcc, NoLock, Preserve)
         {
             RTCX,   1, 
@@ -14023,7 +13897,6 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
         If (CondRefOf (MDBG))
         {
             Return (MDBG) /* External reference */
-            Arg0
         }
 
         Return (Zero)
@@ -15894,7 +15767,7 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
     Scope (\)
     {
         Mutex (SMIX, 0x01)
-        Name (SMIB, 0xCA7D5000)
+        Name (SMIB, 0xCD7D6000)
         Name (PSMI, 0x000000B2)
         Method (SNVC, 1, NotSerialized)
         {
@@ -16063,7 +15936,7 @@ DefinitionBlock ("", "DSDT", 2, "DELL  ", "CBX3   ", 0x00000014)
         Device (AMW0)
         {
             Mutex (WMIX, 0x01)
-            Name (_HID, "*pnp0c14")  // _HID: Hardware ID
+            Name (_HID, "PNP0C14")  // _HID: Hardware ID
             Name (_UID, Zero)  // _UID: Unique ID
             Name (_WDG, Buffer (0x64)
             {
