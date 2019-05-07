@@ -20,8 +20,5 @@ int main(void) {
     memcpy((void *)0xCA7FCC18, gnvs, 0x02B4);
     memcpy((void *)0xCA7FDC18, sanv, 0x016D);
     memcpy((void *)0xCA7FFE18, ppmt, 0x003A);
-//    set_field_value(&xbas);
-//    set_field_value(&aslb);
-//    set_field_value(&nvha);
     return 0;
 }
